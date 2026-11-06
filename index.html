@@ -1,0 +1,181 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>해든 초등 하루 대시보드</title><style>
+*{box-sizing:border-box}body{margin:0;background:#edf3ff;color:#24324b;font-family:'Noto Sans KR','Malgun Gothic',sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}header{display:flex;justify-content:space-between;align-items:center;padding:13px 23px;background:#fff;border-bottom:2px solid #e4eaf4}header h1{margin:0;font-size:clamp(22px,2.5vw,36px)}header small{color:#64748b}button{border:0;border-radius:12px;padding:10px 16px;background:#e8edfa;color:#233a62;font-weight:800}button.primary{background:#356ee9;color:white}main{padding:15px 20px;max-width:1900px;margin:auto}.top{display:grid;grid-template-columns:1.12fr 1fr 1.12fr;gap:14px}.bottom{display:grid;grid-template-columns:1.12fr 1fr 1fr;gap:14px;margin-top:14px}.card{background:white;border-radius:22px;padding:19px 22px;box-shadow:0 4px 18px #243b6410;min-width:0}.card h2{margin:0 0 14px;font-size:clamp(22px,2vw,30px)}.date{background:#e7efff}.weather{background:#fff2d9}.clock{background:#e5f7ed}.big{font-size:clamp(32px,4vw,66px);font-weight:900;letter-spacing:-1.5px}.weekday{font-size:clamp(28px,3vw,48px);font-weight:900;color:#2864c8}.weatherline{display:flex;align-items:center;gap:18px}.weathericon{font-size:clamp(55px,6vw,92px)}.hint{color:#66758e;font-size:clamp(15px,1.35vw,20px)}.subline{font-size:clamp(19px,1.6vw,26px);font-weight:800}.bottom .card{min-height:390px}.subject,.memo,.mealitem{border-radius:13px;background:#f3f6fb;padding:10px 13px;margin:8px 0;font-size:clamp(18px,1.6vw,26px);font-weight:800;display:flex;gap:12px;align-items:center}.subject .num{color:#356ee9;min-width:72px}.subject.now{background:#dceaff;outline:3px solid #4d88ff}.subject.done{opacity:.46}.subject .tag{margin-left:auto;background:#2864c8;color:white;font-size:14px;padding:5px 9px;border-radius:12px}.memo{background:#f4f2ff}.mealitem{background:#f3faf5;margin:5px 0;padding:7px 12px}.footer{text-align:center;padding:12px;color:#8290a6;font-size:14px}.overlay{position:fixed;inset:0;background:#152039a8;display:none;align-items:center;justify-content:center;z-index:9;padding:16px}.overlay.open{display:flex}.panel{background:white;border-radius:22px;padding:23px;width:min(850px,100%);max-height:94vh;overflow:auto}.panelhead{display:flex;justify-content:space-between;align-items:center}.panel h2{margin:0}.field{display:grid;grid-template-columns:140px 1fr;gap:12px;align-items:center;margin:12px 0}.field input,.field select,.field textarea,.tt input{width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:9px}.tt{width:100%;border-collapse:collapse}.tt th,.tt td{border:1px solid #e0e7f0;padding:5px;text-align:center}.tt th{background:#edf3ff}.tt input{text-align:center;min-width:65px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}.tabs button.active{background:#356ee9;color:white}.tab{display:none}.tab.active{display:block}.rowbtn{display:flex;justify-content:flex-end;gap:10px;margin-top:15px}.empty{color:#8895a8;font-size:20px;padding:15px 0}#status{font-size:14px;color:#52647b} @media(max-width:1000px){.bottom{grid-template-columns:1fr 1fr}.bottom .card:last-child{grid-column:1/-1}.top{grid-template-columns:repeat(3,minmax(0,1fr))}.card{padding:14px}}@media(max-width:650px){.top,.bottom{grid-template-columns:1fr}.bottom .card:last-child{grid-column:auto}.bottom .card{min-height:0}.field{grid-template-columns:1fr}header{padding:12px}}
+
+/* 초등 통합 접근성: 전자칠판 16:9, 명료한 대비, 충분한 터치 영역 */
+body{background:linear-gradient(135deg,#eaf1ff,#f5f9ff 55%,#e8f6ee)}
+header{border-bottom:3px solid #dce6fa}header small{font-size:18px;font-weight:800}
+.card{border:2px solid #e1e8f2;box-shadow:0 5px 18px #253d6810}
+.top .card{min-height:215px}.bottom .card{min-height:445px}
+.card h2{font-weight:900;letter-spacing:-.6px}.subject{min-height:58px;border:2px solid #e5ebf4}
+.subject.now{background:#d9e9ff;border-color:#2367d5;outline:2px solid #2367d5}
+.subject.next{background:#fff4d9;border-color:#f4b44b}.subject.done{opacity:.48}
+.subject .symbol{font-size:1.35em;min-width:1.5em;text-align:center}.subject .tag{font-size:16px;white-space:nowrap}
+.subject .tag.nexttag{background:#a35a00}.memo{border-left:6px solid #8b79df;line-height:1.35}
+.mealitem{line-height:1.25}.top .hint{font-weight:700}.progress-wrap{margin-top:12px;padding:10px 13px;background:#f0f5ff;border-radius:14px}
+.progress-label{font-weight:900;font-size:16px;margin-bottom:6px}.progress-track{height:13px;background:#d6e2f5;border-radius:30px;overflow:hidden}.progress-fill{height:100%;background:#3277dd;border-radius:30px;transition:width .3s}
+.focus-note{font-size:17px;font-weight:800;color:#465f83;margin-top:8px}
+body.large-text .subject,body.large-text .memo,body.large-text .mealitem{font-size:clamp(22px,2vw,32px);padding:13px}
+body.high-contrast{background:#e8edf5}body.high-contrast .card{border:3px solid #253a60}body.high-contrast .subject{border:2px solid #415675}
+.teacher-tip{padding:11px 14px;border-radius:12px;background:#eff6ff;color:#355279;font-size:15px;line-height:1.6}
+.toggleline{display:flex;gap:12px;align-items:center;margin:12px 0;font-weight:800}.toggleline input{width:22px;height:22px}
+@media(min-width:1100px) and (min-height:720px){main{height:calc(100vh - 112px);display:flex;flex-direction:column}.top{flex:0 0 auto}.bottom{flex:1;min-height:0}.bottom .card{min-height:0;overflow:auto}}
+@media(max-width:900px){.bottom{grid-template-columns:1fr 1fr}.bottom .card:first-child{grid-row:span 2}.top{grid-template-columns:repeat(3,minmax(0,1fr))}.subject .num{min-width:50px}}
+@media(max-width:650px){header{gap:10px;flex-wrap:wrap}.top,.bottom{grid-template-columns:1fr}.bottom .card:first-child{grid-row:auto}.top .card,.bottom .card{min-height:unset}.field{grid-template-columns:1fr}.big{font-size:44px}}
+
+/* V4: 위아래 동일한 3열 그리드, 날짜 카드 대비, 날씨·시간 가로 정렬 */
+.top,.bottom{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:100%}
+.top .card,.bottom .card{width:100%;min-width:0;border:2px solid #cbd8e9}
+.top .date{background:#fff;border:3px solid #668bd4;box-shadow:0 5px 16px #254c9230}
+.top .weather{background:#fff8e9;border-color:#e8c986}
+.top .clock{background:#ecfaf1;border-color:#a8d7b9}
+.weather .weatherline{display:flex;flex-direction:row;align-items:center;gap:12px}
+.dustline{margin-top:12px;padding:10px 12px;background:#fff;border:2px solid #e9dcbf;border-radius:13px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-weight:800;font-size:clamp(15px,1.2vw,19px)}
+.dustline .duststate{border-radius:9px;padding:4px 9px;background:#e8f4ea;color:#216d39}
+.dustline .duststate.bad{background:#fff0e2;color:#a4490d}
+.dustline .duststate.verybad{background:#ffe4e4;color:#a12727}
+.dustline .duststate.unknown{background:#f1f4f8;color:#607087}
+@media(max-width:900px){.top,.bottom{grid-template-columns:repeat(3,minmax(0,1fr))}.bottom .card:first-child{grid-row:auto}.bottom .card:last-child{grid-column:auto}}
+@media(max-width:700px){.top{grid-template-columns:1fr 1fr}.top .date{grid-column:1/-1}.bottom{grid-template-columns:1fr}.top .card,.bottom .card{min-height:0}}
+@media(max-width:450px){.top{grid-template-columns:1fr}.top .date{grid-column:auto}}
+
+/* V5 · 초등 친화형 디자인 리뉴얼: 기존 기능 유지 */
+@import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;600;700;800;900&display=swap');
+:root{--ink:#263653;--shadow:0 10px 26px rgba(54,84,142,.13)}
+body{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;color:var(--ink);background:radial-gradient(circle at 7% 8%,#d9eaff 0,transparent 27%),radial-gradient(circle at 90% 90%,#e5f7e7 0,transparent 30%),#f4f7ff;min-height:100vh}
+header{margin:16px 20px 0;border:2px solid #dbe8ff;border-radius:25px;background:linear-gradient(110deg,#fff 5%,#edf7ff 68%,#f4fff2);padding:15px 27px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+header:before{content:'🌈';position:absolute;right:25%;top:-17px;font-size:80px;opacity:.16;pointer-events:none}
+header small{color:#5475a6;font-size:17px;letter-spacing:.04em}
+header h1{font-family:'Jua','Noto Sans KR',sans-serif;font-size:clamp(28px,2.9vw,46px);font-weight:900;color:#2665c9;letter-spacing:.02em;text-shadow:0 2px 0 #fff}
+header button{background:#fff;border:2px solid #d6e3fa;box-shadow:0 3px 0 #d9e4f3;font-size:15px}header button.primary{background:#346ce0;border-color:#346ce0;box-shadow:0 3px 0 #174bb4;color:#fff}
+main{padding:18px 20px 6px;max-width:1900px}
+.top,.bottom{grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.card{position:relative;overflow:hidden;border:3px solid #dfe7f5!important;border-radius:27px;padding:20px 23px;box-shadow:var(--shadow);background:#fff;isolation:isolate}
+.card:before{content:'';position:absolute;left:0;top:0;right:0;height:10px;background:var(--stripe,#b9d5ff);z-index:-1}
+.card h2{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400;font-size:clamp(23px,2.1vw,34px);color:#31476b;letter-spacing:0;margin:0 0 13px}
+.top .card{min-height:235px;display:flex;flex-direction:column;justify-content:flex-start}
+.top .date{--stripe:#ff83ae;background:linear-gradient(150deg,#fff 30%,#fff0f6);border-color:#f8bfd2!important}
+.top .weather{--stripe:#ffc34c;background:linear-gradient(150deg,#fff 35%,#fff8e4);border-color:#f8dfa2!important}
+.top .clock{--stripe:#a38aff;background:linear-gradient(150deg,#fff 30%,#f3edff);border-color:#d9c7fb!important}
+.top .date:after{content:'✿';position:absolute;right:18px;bottom:3px;color:#ffd1df;font-size:100px;z-index:-1}
+.top .clock:after{content:'◷';position:absolute;right:17px;bottom:1px;color:#e6dcff;font-size:115px;z-index:-1}
+.big{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400;font-size:clamp(37px,3.5vw,60px);line-height:1.12;letter-spacing:-1px;color:#263653}
+.date .weekday{align-self:flex-start;margin-top:10px;background:#3477ec;color:#fff;padding:4px 19px;border-radius:999px;font-family:'Jua','Noto Sans KR',sans-serif;font-size:clamp(25px,2.3vw,36px);box-shadow:0 4px 0 #b9d4ff}
+.weather .weatherline{flex-direction:row;gap:14px;align-items:center}
+.weathericon{font-size:clamp(58px,5.1vw,83px);filter:drop-shadow(0 4px 3px #f7d48c)}
+.weather .big{font-size:clamp(34px,3.4vw,55px)}.weather .subline{color:#b46b18}
+.weather .hint{font-size:clamp(13px,1vw,16px)}
+.dustline{background:#fff;border:1.5px solid #f0d8a4;box-shadow:0 3px 0 #f9ebcd;border-radius:15px;padding:9px 12px;margin-top:auto;display:flex;gap:8px;font-size:clamp(13px,1.05vw,17px)}
+.dustline .duststate{font-size:clamp(13px,1vw,16px);font-weight:900}
+.clock .big{font-size:clamp(48px,5vw,86px);color:#5144a8;margin-top:8px}.clock .subline{color:#6c59a9}
+.bottom .card{min-height:405px;--stripe:#a7d9b4}
+.bottom .card:first-child{--stripe:#63c89d;background:linear-gradient(#f1fff3 0,#fff 100%);border-color:#b8e4c6!important}
+.bottom .card:nth-child(2){--stripe:#a995ef;background:linear-gradient(#f6f0ff 0,#fff 100%);border-color:#d9c9f8!important}
+.bottom .card:nth-child(3){--stripe:#ffbd78;background:linear-gradient(#fff6e9 0,#fff 100%);border-color:#f3d7b7!important}
+.subject{background:#fff;border:2px solid #dce8e5;border-radius:16px;min-height:58px;box-shadow:0 3px 0 #e2eae7;padding:9px 11px;transition:background .2s;font-size:clamp(18px,1.5vw,25px)}
+.subject .num{color:#3474b9;font-size:.8em;min-width:55px}.subject .symbol{font-size:1.45em}
+.subject.now{background:#e2efff;border:3px solid #3279e8;outline:0;box-shadow:0 4px 0 #bed8ff}
+.subject.next{background:#fff6d5;border:3px solid #f3c44e;box-shadow:0 4px 0 #f9e8a6}
+.subject.done{opacity:.55}.subject .tag{border-radius:999px;background:#3479e8}
+.memo{background:#fff;border:2px solid #e4dafa;border-left:7px solid #a18ce9;border-radius:16px;box-shadow:0 3px 0 #e8e0f9;min-height:58px}
+.mealitem{background:#fff;border:2px solid #f4e2c7;border-radius:15px;box-shadow:0 3px 0 #f8ead6;padding:10px 13px;margin:8px 0}
+.progress-wrap{background:#fff;border:1.5px solid #d9eadb}.progress-fill{background:linear-gradient(90deg,#3abf93,#64d4a4)}
+.footer{font-weight:800;color:#6c87a8;padding:6px 12px 16px}
+.panel{border:3px solid #dce6fb;box-shadow:0 20px 80px #0d1f4660}.panel h2{font-family:'Jua',sans-serif;font-size:30px}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:4px solid #ffbc4d;outline-offset:2px}
+body.high-contrast .card{border:4px solid #35476b!important}
+@media(min-width:1100px) and (min-height:720px){main{height:auto;min-height:calc(100vh - 145px)}.top{flex:none}.bottom{flex:1}.bottom .card{overflow:auto}}
+@media(max-width:1000px){header{margin:10px}.top,.bottom{gap:10px}.card{padding:14px}.subject .num{min-width:42px}.dustline{flex-wrap:wrap}}
+@media(max-width:700px){.top{grid-template-columns:1fr 1fr}.top .date{grid-column:1/-1}.bottom{grid-template-columns:1fr}.top .card,.bottom .card{min-height:0}header{flex-wrap:wrap}}
+@media(max-width:450px){.top{grid-template-columns:1fr}.top .date{grid-column:auto}}
+
+/* V6: 차분한 모던 에듀테크 스타일. 과한 장식 제거, 큰 글씨와 명료한 구획 유지 */
+body{background:#f2f5fa;color:#26344b;font-family:'Noto Sans KR','Malgun Gothic',sans-serif}
+header{background:#fff;border:1px solid #e3e9f1;border-radius:20px;box-shadow:0 5px 20px rgba(31,53,86,.055)}
+header:before,.top .date:after,.top .clock:after{content:none!important;display:none!important}
+header h1{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;font-weight:900;color:#245ec2;text-shadow:none;letter-spacing:-.035em}
+header small{color:#697b96}
+header button{box-shadow:none;border:1px solid #dce4f0;background:#f6f8fc}
+header button.primary{box-shadow:none}
+.card{background:#fff!important;border:1px solid #e0e6ef!important;border-radius:20px;box-shadow:0 5px 20px rgba(35,55,87,.065);padding:22px 24px}
+.card:before{height:5px;background:var(--stripe,#a5bbd9)}
+.card h2{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;font-size:clamp(22px,1.9vw,29px);font-weight:800;color:#35445c;letter-spacing:-.04em}
+.top .date{--stripe:#ee85ae;border-color:#e9d5df!important}
+.top .weather{--stripe:#e5b85e;border-color:#e8e3d7!important}
+.top .clock{--stripe:#8797d9;border-color:#dfe3f0!important}
+.big{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;font-weight:900;letter-spacing:-.045em}
+.date .big{color:#e04e8b;font-weight:900;font-size:clamp(39px,3.55vw,62px)}
+.date .weekday{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;background:none;color:#df548d;box-shadow:none;padding:0;border-radius:0;font-weight:800;font-size:clamp(26px,2.2vw,36px);margin-top:8px}
+.clock .big{font-family:'Noto Sans KR','Malgun Gothic',sans-serif;color:#2f3f61;font-weight:900;margin-top:10px;line-height:1.1;font-size:clamp(47px,4.7vw,82px)}
+.clock #ampm{display:block;margin-top:22px;padding-top:4px;font-size:clamp(22px,1.7vw,29px);font-weight:800;color:#6576a4;line-height:1.5}
+.weathericon{filter:none}.weather .subline{color:#786134}.weather .hint{color:#68788c}
+.dustline{background:#f8fafc;border:1px solid #e7eaf0;box-shadow:none;border-radius:12px}
+.bottom .card:first-child{--stripe:#72b99a;border-color:#dcebe3!important}
+.bottom .card:nth-child(2){--stripe:#a49cce;border-color:#e5e1f0!important}
+.bottom .card:nth-child(3){--stripe:#e5b382;border-color:#eee3d9!important}
+.subject,.memo,.mealitem{background:#f8fafc;border:1px solid #e7ebf2;border-radius:12px;box-shadow:none}
+.subject.now{background:#eaf2ff;border:2px solid #4682dd;box-shadow:none}
+.subject.next{background:#fff6df;border:2px solid #e4ba5b;box-shadow:none}
+.memo{border-left:4px solid #a49cce}
+.progress-wrap{background:#f6f9fc;border:1px solid #e5ebf1}
+.progress-fill{background:#6bb49a}
+@media(max-width:1000px){.card{padding:16px}.clock #ampm{margin-top:16px}}
+/* V8: 날짜 제목 아래 간격 및 요일별 교시 편집 */
+.weekday-periods{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.weekday-periods label{background:#f1f6ff;border:1px solid #dce6f5;border-radius:12px;padding:9px 6px;text-align:center;font-weight:800}
+.weekday-periods select{display:block;width:100%;margin-top:7px;padding:7px;border:1px solid #cbd5e1;border-radius:8px;background:white}
+.tt td.disabled-period{background:#f2f4f8;color:#9ba8b8}.tt td.disabled-period input{visibility:hidden}
+@media(max-width:650px){.weekday-periods{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* V7: 부드러운 반투명 블루 배경과 날짜/시간 간격 */
+body{background:linear-gradient(135deg,rgba(179,207,250,.42) 0%,rgba(222,235,255,.62) 48%,rgba(192,218,252,.38) 100%),#f7faff!important}
+.top .date .big{display:block;margin-top:20px!important;margin-bottom:18px!important;line-height:1.18}
+.top .date .weekday{margin-top:0!important;display:block}
+.top .clock #clock{display:block;line-height:1.18}
+.top .clock #ampm{display:block;margin-top:20px!important}
+.memo-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.memo-heading h2{margin:0}.memo-add{flex:none;width:52px;height:52px;padding:0;background:#e8efff;color:#2769db;border-radius:15px;font-size:35px;line-height:1;display:grid;place-items:center}.memo-add:hover{background:#d8e5ff}.memo-edit-row{display:flex;align-items:center;gap:8px}.memo-inline-input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:#24324b;font-weight:750;font-size:inherit;padding:5px 0}.memo-inline-input:focus{box-shadow:0 2px 0 #729af0}.memo-delete{flex:none;padding:4px 9px;background:transparent;color:#8b95a7;font-size:24px}.memo-delete:hover{color:#cf4567;background:#fff0f4}
+</style></head><body><header><div><small id="school">대전해든학교</small><h1 id="className">🌈 초등 우리 반의 하루</h1></div><div><button onclick="document.documentElement.requestFullscreen?.()">⛶ 전체화면</button> <button class="primary" onclick="openPanel()">⚙️ 선생님 설정</button></div></header><main><section class="top"><article class="card date"><h2>📅 오늘 날짜</h2><div class="big" id="date">—</div><div class="weekday" id="day">—</div></article><article class="card weather"><h2>🌤 오늘 날씨 <span class="hint">· 대전</span></h2><div class="weatherline"><span class="weathericon" id="weatherIcon">🌤</span><div><div class="big" id="temp">—</div><div class="subline" id="weatherText">날씨 확인 중</div></div></div><div class="hint" id="weatherTip"></div><div class="dustline" aria-live="polite"><span>🌿 미세먼지</span><span id="dustState" class="duststate unknown">확인 중</span><span id="dustDetail" class="hint">PM10 · PM2.5</span></div></article><article class="card clock"><h2>🕒 지금 시간</h2><div class="big" id="clock">—</div><div class="subline" id="ampm">오전</div></article></section><section class="bottom"><article class="card"><h2>📚 오늘의 시간표</h2><div id="subjects"></div><div id="dailyProgress" class="progress-wrap"></div><div id="nextFocus" class="focus-note"></div></article><article class="card"><div class="memo-heading"><h2>📢 오늘의 일정 · 메모</h2><button type="button" class="memo-add" onclick="addInlineMemo()" title="오늘 일정 추가" aria-label="오늘 일정 추가">＋</button></div><div id="memos"></div></article><article class="card"><h2>🍚 오늘의 급식</h2><div id="meal"></div><div class="hint" id="mealSource"></div></article></section></main><div class="footer">오늘도 즐거운 하루 🌷 · Made by Misom</div><div class="overlay" id="overlay"><div class="panel"><div class="panelhead"><h2>⚙️ 선생님 설정</h2><button onclick="closePanel()">✕ 닫기</button></div><div class="tabs"><button data-tab="basic" class="active" onclick="tab('basic')">학급·교시</button><button data-tab="timetable" onclick="tab('timetable')">주간 시간표</button><button data-tab="memo" onclick="tab('memo')">날짜별 일정</button><button data-tab="mealedit" onclick="tab('mealedit')">급식·날씨</button></div><div class="tab active" id="basic"><div class="field"><label>학교 이름</label><input id="schoolInput"></div><div class="field"><label>학급 이름</label><input id="classInput"></div><div class="teacher-tip">학생 화면에는 날짜·날씨·시간·시간표·일정·급식만 표시됩니다. 그림은 과목명에 맞춰 자동으로 나타나며, 교사 화면에서 크기와 강조 표시를 조정할 수 있습니다.</div><label class="toggleline"><input type="checkbox" id="largeText"> 글씨 더 크게 보기</label><label class="toggleline"><input type="checkbox" id="highContrast"> 선명한 테두리(고대비)</label><label class="toggleline"><input type="checkbox" id="showProgress"> 하루 수업 진행 막대 표시</label><div class="field"><label>요일별 교시 수</label><div id="weekdayPeriods" class="weekday-periods"></div></div><div class="field"><label>수업 시작·종료 시간</label><div id="times"></div></div><p class="hint">실제 학교의 교시 시작·종료 시간을 입력하면 '지금' 표시가 정확해집니다.</p></div><div class="tab" id="timetable"><p class="hint">요일별로 설정한 교시 수만큼 표시되며, 과목을 입력하지 않아도 해당 교시가 유지됩니다.</p><p class="hint">월~금 과목을 입력하면 오늘 요일의 시간표가 자동으로 나타납니다. 그림은 과목명에 따라 자동 선택됩니다.</p><div style="overflow:auto"><table class="tt" id="tt"></table></div></div><div class="tab" id="memo"><div class="field"><label>일정 날짜</label><input type="date" id="memoDate" onchange="changeMemoDate()"></div><div class="field"><label>오늘의 일정</label><textarea rows="6" id="memoText" placeholder="한 줄에 하나씩 입력하세요.&#10;예) 🎒 체육복 챙기기&#10;🌳 산책하기"></textarea></div><p class="hint">날짜별로 저장됩니다. 입력하지 않은 날에는 이전 일정이 표시되지 않습니다.</p></div><div class="tab" id="mealedit"><div class="field"><label>급식</label><select id="mealMode"><option value="auto">나이스 자동 조회</option><option value="manual">직접 입력</option></select></div><div class="field"><label>직접 입력 메뉴</label><textarea id="manualMeal" rows="5" placeholder="한 줄에 메뉴 하나씩"></textarea></div><div class="field"><label>날씨</label><select id="weatherMode"><option value="auto">자동 조회</option><option value="sun">☀️ 맑음</option><option value="cloud">☁️ 흐림</option><option value="rain">🌧️ 비</option><option value="snow">❄️ 눈</option></select></div><p class="hint">자동 조회가 실패하면 오류 안내가 표시됩니다. 교사가 수동으로 변경할 수도 있습니다.</p></div><div class="rowbtn"><span id="status"></span><button class="primary" onclick="saveAll()">💾 저장하고 적용</button></div></div></div><script>
+const KEY='haedeun_elementary_v2';const days=['일','월','화','수','목','금','토'],wd=['월','화','수','목','금'];const pad=n=>String(n).padStart(2,'0');const localDay=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;const defaultTimes=[['09:10','09:50'],['10:00','10:40'],['10:50','11:30'],['11:40','12:20'],['13:10','13:50'],['14:00','14:40'],['14:50','15:30']];let cfg;try{cfg=JSON.parse(localStorage.getItem(KEY))}catch(e){}cfg=Object.assign({school:'대전해든학교',cls:'🌈 초등 우리 반의 하루',periods:7,dayPeriods:null,times:defaultTimes,tt:{},memos:{},mealMode:'auto',manualMeal:'',weatherMode:'auto',largeText:false,highContrast:false,showProgress:true},cfg||{});cfg.dayPeriods=Object.assign(Object.fromEntries(wd.map(d=>[d,Math.max(1,Math.min(7,Number(cfg.periods)||7))])),cfg.dayPeriods||{});const $=id=>document.getElementById(id);const escapeHtml=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));function today(){return localDay(new Date())}function updateClock(){let n=new Date();$('date').textContent=`${n.getMonth()+1}월 ${n.getDate()}일`;$('day').textContent=days[n.getDay()]+'요일';$('clock').textContent=`${pad(n.getHours()%12||12)}:${pad(n.getMinutes())}`;$('ampm').textContent=n.getHours()<12?'오전':'오후';if(window.lastDay!==today()||window.lastMinute!==n.getHours()*60+n.getMinutes()){window.lastDay=today();window.lastMinute=n.getHours()*60+n.getMinutes();renderDaily();}}function iconFor(s){if(/현장|체험학습/.test(s))return '🚌';if(/요리|조리/.test(s))return '👩‍🍳';if(/산책|걷기/.test(s))return '🚶';if(/안전/.test(s))return '🦺';if(/창체|자율/.test(s))return '🌈';if(/의사소통/.test(s))return '💬';if(/국어|독서|책|읽기/.test(s))return '📖';if(/수학|셈/.test(s))return '🔢';if(/미술|그리기|만들기/.test(s))return '🎨';if(/체육|운동|놀이/.test(s))return '⚽';if(/음악|노래/.test(s))return '🎵';if(/급식|점심/.test(s))return '🍚';if(/과학|탐구/.test(s))return '🔬';if(/컴퓨터|정보/.test(s))return '💻';if(/자립|생활/.test(s))return '🧺';return '⭐'}function renderDaily(){$('school').textContent=cfg.school;$('className').textContent=cfg.cls;document.body.classList.toggle('large-text',!!cfg.largeText);document.body.classList.toggle('high-contrast',!!cfg.highContrast);let d=wd[new Date().getDay()-1];let items=d?(cfg.tt[d]||[]):[];let now=new Date(),mins=now.getHours()*60+now.getMinutes();let dayCount=d?(cfg.dayPeriods[d]||cfg.periods):0;let periods=Array.from({length:dayCount},(_,i)=>{let t=cfg.times[i]||defaultTimes[i];let a=t[0].split(':').map(Number),b=t[1].split(':').map(Number);return {index:i,subject:items[i]||'',start:a[0]*60+a[1],end:b[0]*60+b[1]}}).filter(x=>x.subject);let nextPeriod=periods.find(x=>x.start>mins);let finished=periods.filter(x=>x.end<=mins).length;let progress=periods.length?Math.round(finished/periods.length*100):0;$('dailyProgress').style.display=cfg.showProgress&&periods.length?'block':'none';$('dailyProgress').innerHTML='<div class="progress-label">🌱 오늘 수업 '+finished+' / '+periods.length+' 마침</div><div class="progress-track"><div class="progress-fill" style="width:'+progress+'%"></div></div>';$('nextFocus').textContent=nextPeriod?'➡️ 다음 수업: '+nextPeriod.subject:periods.length&&finished===periods.length?'🎉 오늘 수업을 모두 마쳤어요!':'';$('subjects').innerHTML=!d?'<div class="empty">🌷 오늘은 쉬는 날이에요</div>':Array.from({length:dayCount},(_,i)=>{let s=items[i]||'',t=cfg.times[i]||defaultTimes[i],a=t[0].split(':').map(Number),b=t[1].split(':').map(Number),start=a[0]*60+a[1],end=b[0]*60+b[1],current=mins>=start&&mins<end,done=mins>=end;return s?`<div class="subject ${current?'now':done?'done':nextPeriod&&nextPeriod.index===i?'next':''}"><span class="num">${i+1}교시</span><span class="symbol" aria-hidden="true">${iconFor(s)}</span><span>${escapeHtml(s)}</span>${current?'<span class="tag">▶ 지금</span>':nextPeriod&&nextPeriod.index===i?'<span class="tag nexttag">다음</span>':''}</div>`:''}).join('')||'<div class="empty">선생님 설정에서 시간표를 입력해 주세요.</div>';let memo=cfg.memos[today()]||'';renderInlineMemos();if(cfg.mealMode==='manual')showMeal(cfg.manualMeal.split('\n').filter(Boolean),'선생님 입력');else if(window.lastMealDay!==today()){window.lastMealDay=today();loadMeal()}applyWeatherMode()}function memoItems(){return (cfg.memos[today()]||'').split('\n').filter(x=>x.trim())}
+function persistMemoItems(items){cfg.memos[today()]=items.join('\n');localStorage.setItem(KEY,JSON.stringify(cfg));}
+function renderInlineMemos(focusIndex){
+ const items=memoItems();const root=$('memos');root.innerHTML='';
+ if(!items.length){const empty=document.createElement('div');empty.className='empty';empty.textContent='＋ 버튼을 눌러 오늘의 일정을 추가하세요';root.appendChild(empty)}
+ items.forEach((value,i)=>{
+  const line=document.createElement('div');line.className='memo memo-edit-row';
+  const input=document.createElement('input');input.className='memo-inline-input';input.type='text';input.value=value;input.placeholder='오늘의 일정을 입력하세요';input.setAttribute('aria-label',`${i+1}번째 일정`);
+  input.addEventListener('input',()=>{const current=memoItems();current[i]=input.value;cfg.memos[today()]=current.join('\n');localStorage.setItem(KEY,JSON.stringify(cfg));});
+  input.addEventListener('blur',()=>{if(!input.value.trim())renderInlineMemos()});
+  input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();input.blur()} });
+  const del=document.createElement('button');del.type='button';del.className='memo-delete';del.textContent='×';del.title='일정 삭제';del.setAttribute('aria-label',`${i+1}번째 일정 삭제`);del.onclick=()=>{const current=memoItems();current.splice(i,1);persistMemoItems(current);renderInlineMemos()};
+  line.append(input,del);root.appendChild(line);
+ });
+ if(focusIndex!==undefined){const inp=root.querySelectorAll('.memo-inline-input')[focusIndex];if(inp){inp.focus();inp.select()}}
+}
+function addInlineMemo(){const items=memoItems();items.push('새 일정');persistMemoItems(items);renderInlineMemos(items.length-1)}
+function showMeal(items,source){$('meal').innerHTML=items.length?items.map(x=>`<div class="mealitem">${escapeHtml(x)}</div>`).join(''):'<div class="empty">오늘 급식 정보가 없어요 🍽️</div>';$('mealSource').textContent=source||''}async function loadMeal(){if(cfg.mealMode!=='auto')return;$('meal').innerHTML='<div class="empty">급식 정보를 불러오는 중…</div>';try{let r=await fetch('https://open.neis.go.kr/hub/schoolInfo?Type=json&SCHUL_NM='+encodeURIComponent(cfg.school)),j=await r.json(),row=j.schoolInfo?.[1]?.row?.find(x=>x.SCHUL_NM===cfg.school);if(!row)throw Error('학교 정보를 찾지 못했어요');let u=`https://open.neis.go.kr/hub/mealServiceDietInfo?Type=json&ATPT_OFCDC_SC_CODE=${row.ATPT_OFCDC_SC_CODE}&SD_SCHUL_CODE=${row.SD_SCHUL_CODE}&MLSV_YMD=${today().replaceAll('-','')}&MMEAL_SC_CODE=2`,m=await(await fetch(u)).json(),dish=m.mealServiceDietInfo?.[1]?.row?.[0]?.DDISH_NM;if(!dish){showMeal([],'NEIS 학교급식 공공데이터');return}showMeal(dish.split(/<br\s*\/?\s*>/i).map(x=>x.replace(/\([^)]*\)/g,'').trim()).filter(Boolean),'NEIS 학교급식 공공데이터')}catch(e){$('meal').innerHTML='<div class="empty">급식을 불러오지 못했어요. ⚙️에서 직접 입력할 수 있어요.</div>';$('mealSource').textContent='네트워크 또는 학교 조회 확인 필요'}}function weatherDisplay(code,temp){let emoji=code==='sun'?'☀️':code==='rain'?'🌧️':code==='snow'?'❄️':'☁️',label=code==='sun'?'맑음':code==='rain'?'비':code==='snow'?'눈':'흐림';$('weatherIcon').textContent=emoji;$('temp').textContent=temp==null?'':temp+'°C';$('weatherText').textContent=label;$('weatherTip').textContent=code==='rain'?'☂️ 우산을 챙겨요':code==='snow'?'🧣 따뜻하게 입어요':code==='sun'?'🧢 햇빛을 살펴봐요':'🌥️ 하늘을 살펴봐요'}function applyWeatherMode(){if(cfg.weatherMode!=='auto')weatherDisplay(cfg.weatherMode,null)}async function loadWeather(){if(cfg.weatherMode!=='auto'){applyWeatherMode();return}try{let r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=36.35&longitude=127.38&current=temperature_2m,weather_code&timezone=Asia%2FSeoul');if(!r.ok)throw Error();let j=await r.json(),c=j.current.weather_code;weatherDisplay([0,1].includes(c)?'sun':[51,53,55,61,63,65,80,81,82,95,96,99].includes(c)?'rain':[71,73,75,77,85,86].includes(c)?'snow':'cloud',Math.round(j.current.temperature_2m));$('weatherTip').textContent+=' · 대전 기준'}catch(e){$('weatherText').textContent='날씨를 불러오지 못했어요';$('weatherTip').textContent='설정에서 직접 선택할 수 있어요'}}async function loadDust(){
+  const state=$('dustState'),detail=$('dustDetail');
+  try{
+    const url='https://air-quality-api.open-meteo.com/v1/air-quality?latitude=36.35&longitude=127.38&current=pm10,pm2_5&timezone=Asia%2FSeoul';
+    const response=await fetch(url);
+    if(!response.ok)throw Error('air quality fetch failed');
+    const current=(await response.json()).current||{};
+    const pm10=current.pm10,pm25=current.pm2_5;
+    if(typeof pm10!=='number' || typeof pm25!=='number')throw Error('no values');
+    const grade10=pm10<=30?0:pm10<=80?1:pm10<=150?2:3;
+    const grade25=pm25<=15?0:pm25<=35?1:pm25<=75?2:3;
+    const grade=Math.max(grade10,grade25);
+    state.textContent=['좋음 😊','보통 🙂','나쁨 😷','매우 나쁨 😷'][grade];
+    state.className='duststate '+(['','', 'bad','verybad'][grade]);
+    detail.textContent='미세 '+Math.round(pm10)+' · 초미세 '+Math.round(pm25)+' ㎍/㎥';
+    detail.title='Open-Meteo 대기질 모델 추정치 · 대전 기준';
+  }catch(e){state.textContent='정보 없음';state.className='duststate unknown';detail.textContent='잠시 후 다시 확인';}
+}
+function openPanel(){$('overlay').classList.add('open');$('schoolInput').value=cfg.school;$('classInput').value=cfg.cls;$('weekdayPeriods').innerHTML=wd.map(d=>`<label>${d}요일<select id="dayCount${d}" onchange="buildEditor()">${Array.from({length:7},(_,i)=>`<option value="${i+1}" ${(cfg.dayPeriods[d]||cfg.periods)==i+1?'selected':''}>${i+1}교시</option>`).join('')}</select></label>`).join('');$('memoDate').value=today();$('mealMode').value=cfg.mealMode;$('manualMeal').value=cfg.manualMeal;$('weatherMode').value=cfg.weatherMode;$('largeText').checked=!!cfg.largeText;$('highContrast').checked=!!cfg.highContrast;$('showProgress').checked=cfg.showProgress!==false;buildEditor();loadMemoEditor()}function closePanel(){$('overlay').classList.remove('open')}function tab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.id===t));document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab===t))}function buildEditor(){
+  const counts=Object.fromEntries(wd.map(d=>[d,Number($('dayCount'+d).value)]));
+  const n=Math.max(...Object.values(counts));
+  // 편집 중 교시 수 변경 시 이미 입력한 과목을 유지
+  const existing={};wd.forEach(d=>existing[d]=Array.from({length:7},(_,i)=>$('tt'+d+i)?.value ?? (cfg.tt[d]||[])[i] ?? ''));
+  const existingTimes=Array.from({length:7},(_,i)=>[$('start'+i)?.value || (cfg.times[i]||defaultTimes[i])[0],$('end'+i)?.value || (cfg.times[i]||defaultTimes[i])[1]]);
+  $('times').innerHTML=Array.from({length:n},(_,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><b>${i+1}교시</b><input aria-label="${i+1}교시 시작" type="time" id="start${i}" value="${existingTimes[i][0]}"><span>~</span><input aria-label="${i+1}교시 종료" type="time" id="end${i}" value="${existingTimes[i][1]}"></div>`).join('');
+  $('tt').innerHTML='<tr><th>교시</th>'+wd.map(d=>`<th>${d}요일<br><small>${counts[d]}교시</small></th>`).join('')+'</tr>'+Array.from({length:7},(_,i)=>`<tr><th>${i+1}</th>${wd.map(d=>`<td class="${i>=counts[d]?'disabled-period':''}"><input id="tt${d}${i}" ${i>=counts[d]?'disabled':''} value="${escapeHtml(existing[d][i])}" placeholder="과목"></td>`).join('')}</tr>`).join('');
+}
+let lastMemoEditorDate='';function changeMemoDate(){if(lastMemoEditorDate){cfg.memos[lastMemoEditorDate]=$('memoText').value;localStorage.setItem(KEY,JSON.stringify(cfg));}loadMemoEditor()}function loadMemoEditor(){lastMemoEditorDate=$('memoDate').value;$('memoText').value=cfg.memos[$('memoDate').value]||''}function saveAll(){let dayPeriods=Object.fromEntries(wd.map(d=>[d,Number($('dayCount'+d).value)])),n=Math.max(...Object.values(dayPeriods)),next=structuredClone(cfg);next.school=$('schoolInput').value.trim()||'대전해든학교';next.cls=$('classInput').value.trim()||'🌈 초등 우리 반의 하루';next.periods=n;next.dayPeriods=dayPeriods;next.times=Array.from({length:n},(_,i)=>[$('start'+i).value,$('end'+i).value]);next.tt={};wd.forEach(d=>next.tt[d]=Array.from({length:7},(_,i)=>$('tt'+d+i)?.value.trim()||''));next.memos[lastMemoEditorDate||$('memoDate').value]=$('memoText').value;next.mealMode=$('mealMode').value;next.manualMeal=$('manualMeal').value;next.weatherMode=$('weatherMode').value;next.largeText=$('largeText').checked;next.highContrast=$('highContrast').checked;next.showProgress=$('showProgress').checked;cfg=next;localStorage.setItem(KEY,JSON.stringify(cfg));window.lastMealDay='';renderDaily();loadWeather();$('status').textContent='저장했어요 ✓';setTimeout(closePanel,450)}$('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closePanel()});updateClock();setInterval(updateClock,1000);loadWeather();setInterval(loadWeather,30*60*1000);loadDust();setInterval(loadDust,30*60*1000);
+</script></body></html>
